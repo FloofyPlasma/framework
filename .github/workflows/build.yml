@@ -19,9 +19,17 @@ jobs:
               with:
                 node-version: latest
 
-            - name: Install depdencies
+            - name: Install node depdencies
               run: npm install
 
+            - name: Setup Pesde
+              uses: lumin-org/setup-pesde@v0.3.2
+              with:
+                cache: true
+
+            - name: Install Pesde dependencies
+              run: pesde install
+            
             - name: Build
               run: npx rbxtsc
 

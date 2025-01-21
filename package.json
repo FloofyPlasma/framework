@@ -8,7 +8,8 @@
     "description": "A featherlight and quick framework for Roblox experiences",
     "files": [
         "**/out/**",
-        "!**/*.tsbuildinfo"
+        "!**/*.tsbuildinfo",
+        "**/roblox_packages/**"
     ],
     "dependencies": {
         "@rbxts/compiler-types": "^3.0.0-types.0",
