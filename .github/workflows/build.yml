@@ -20,10 +20,13 @@ jobs:
             - name: Install depdencies
               run: npm install
 
+            - name: Build
+              run: npx rbxtsc
+
             - name: Create package directory
               run: mkdir package
 
-            - name: Package the depdency
+            - name: Package
               run: npm pack --pack-destination ./package
 
             - name: Upload the package
