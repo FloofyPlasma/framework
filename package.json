@@ -1,0 +1,19 @@
+{
+    "name": "@rbxts/lumin-framework",
+    "version": "9.1.1",
+    "main": "out/init.luau",
+    "typings": "out/index.d.ts",
+    "license": "MIT",
+    "type": "commonjs",
+    "description": "A featherlight and quick framework for Roblox experiences",
+    "files": [
+        "**/out",
+        "!**/*.tsbuildinfo"
+    ],
+    "dependencies": {
+        "@rbxts/compiler-types": "^3.0.0-types.0",
+        "@rbxts/types": "^1.0.813",
+        "roblox-ts": "^3.0.0",
+        "typescript": "^5.7.3"
+    }
+}

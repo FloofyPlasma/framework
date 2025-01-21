@@ -3,7 +3,7 @@
     "tree": {
         "$className": "Folder",
         "src": {
-            "$path": "src"
+            "$path": "out"
         },
         "roblox_packages": {
             "$path": "roblox_packages"
