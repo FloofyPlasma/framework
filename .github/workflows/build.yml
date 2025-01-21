@@ -1,0 +1,40 @@
+name: Build
+
+on:
+    push:
+        branches: typescript-support
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js environment
+              uses: actions/setup-node@v4.1.0
+              with:
+                node-version: latest
+
+            - name: Install depdencies
+              run: npm install
+
+            - name: Create package directory
+              run: mkdir package
+
+            - name: Package the depdency
+              run: npm pack --pack-destination ./package
+
+            - name: Upload the package
+              uses: softprops/action-gh-release@v2.2.1
+              with:
+                tag_name: CB.${{ github.sha }}
+                name: Continuous Build ${{ github.sha }}
+                prerelease: true
+                generate_release_notes: true
+                body: |
+                  Build created at ${{ github.event.repository.updated_at }}
+                  Latest commit: ${{ github.sha }}
+                files: |
+                 ./package/rbxts-lumin-framework-9.1.1.tgz
