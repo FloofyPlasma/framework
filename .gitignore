@@ -8,6 +8,10 @@ pesde.lock
 # Rojo
 sourcemap.json
 
+# Rbxts
+node_modules
+out
+
 # Local Builds
 build
 

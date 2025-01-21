@@ -4,11 +4,11 @@ local http = game:GetService("HttpService")
 local types = require(script.types)
 local logs = require(script.logs)
 local spawn = require(script.spawn)
-local debugger = require(script.Parent.roblox_packages.debugger)
+--local debugger = require(script.Parent.roblox_packages.debugger)
 
-local assert = debugger.assert
-local fatal = debugger.fatal
-local warn = debugger.warn
+local assert = assert
+local fatal = error
+local warn = warn
 
 local started = false
 
@@ -35,45 +35,49 @@ end
 
 -- Starts a provider
 local function StartProvider(provider: Provider<any>)
-	if provider.Start then
+	if provider.default.Start then
 		-- Ensure prop is the correct type
-		local argType = type(provider.Start)
+		local argType = type(provider.default.Start)
 		assert(argType == "function", "InvalidType", "function", argType)
 		-- Start the provider
-		debug.setmemorycategory(provider.Name)
-		spawn(provider.Start)
+		debug.setmemorycategory(provider.default.Name)
+		spawn(provider.default.Start)
 	end
 end
 
 -- Inits a provider
 local function InitProvider(provider: Provider<any>)
-	if provider.Init then
+	if provider.default.Init then
 		-- Ensure prop is the correct type
-		local argType = type(provider.Init)
+		local argType = type(provider.default.Init)
 		assert(argType == "function", "InvalidType", "function", argType)
 
 		-- Use custom pcall to supply error to fatal debug
-		local success, result: debugger.ParsedError = xpcall(function()
-			-- Init the provider
-			debug.setmemorycategory(provider.Name);
-			(provider :: any).Init()
-		end, debugger.parse)
+		-- local success, result: debugger.ParsedError = xpcall(function()
+		-- 	-- Init the provider
+		-- 	debug.setmemorycategory(provider.Name);
+		-- 	(provider :: any).Init()
+		-- end, debugger.parse)
 
-		if not success then
-			fatal("FatalInit", result.Message) -- If there was an error, share it with the user
-		end
+		-- if not success then
+		-- 	fatal("FatalInit", result.Message) -- If there was an error, share it with the user
+		-- end
+        if typeof(provider.default.Init) ~= "function" then return end
+        provider.default.Init()
+
+        --fatal("Undefined behavior.")
 	end
     table.insert(initiatedProviders, provider) -- Add to the loaded providers table
 end
 
 -- Inits the dependencies of a provider (deep indexing)
 local function InitDependencies(provider: Provider<any>)
-	if provider.Uses then
+	if provider.default.Uses then
 		-- Ensure prop is the correct type
-		local argType = type(provider.Uses)
+		local argType = type(provider.default.Uses)
 		assert(argType == "table", "InvalidType", "table", argType)
 
-		for _, usedProvider in provider.Uses :: any do
+		for _, usedProvider in provider.default.Uses :: any do
 			if usedProvider.Init and not table.find(initiatedProviders, usedProvider) then
 				InitDependencies(usedProvider) -- Check if there are more dependencies nested
 				InitProvider(usedProvider) -- Load the dependency
@@ -135,17 +139,19 @@ local function Add(dirs: { Instance }, filter: ((ModuleScript) -> boolean)?)
 				continue
 			end
 
-			local success, result: debugger.ParsedError = xpcall(require, debugger.parse, module)
+			-- local success, result: debugger.ParsedError = xpcall(require, debugger.parse, module)
 
-			if not success then
-				if result.Message:find("Module code did not return exactly one value") then
-					warn("FatalAddModule", result.Message)
-				else
-					fatal("FatalAddModule", result.Message)
-				end
-			end
+			-- if not success then
+			-- 	if result.Message:find("Module code did not return exactly one value") then
+			-- 		warn("FatalAddModule", result.Message)
+			-- 	else
+			-- 		fatal("FatalAddModule", result.Message)
+			-- 	end
+			-- end
 
-			table.insert(addedProviders, result :: any)
+            -- fatal("Undefined behavior.")
+
+			table.insert(addedProviders, require(module) :: any)
 		end
 	end
 end
@@ -182,11 +188,11 @@ end
 
 -- Debugger
 
-debugger.set({
-	Logs = logs,
-	Name = "Framework",
-	URL = "https://lumin-org.github.io/framework/guide/errors#",
-})
+-- debugger.set({
+-- 	Logs = logs,
+-- 	Name = "Framework",
+-- 	URL = "https://lumin-org.github.io/framework/guide/errors#",
+-- })
 
 -- Types
 
