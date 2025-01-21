@@ -36,7 +36,7 @@ jobs:
               with:
                 tag_name: CB.${{ github.sha }}
                 name: Continuous Build ${{ github.sha }}
-                prerelease: true
+                prerelease: false
                 generate_release_notes: true
                 body: |
                   Build created at ${{ github.event.repository.updated_at }}
